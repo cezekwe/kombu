@@ -100,7 +100,7 @@ class AsyncSQSConnection(AsyncAWSQueryConnection):
                                    callback=None):
         return self.get_status(
             'DeleteMessage', {'ReceiptHandle': receipt_handle},
-            queue.id, callback=callback,
+            queue, verb='POST', callback=callback,
         )
 
     def send_message(self, queue, message_content,
