@@ -371,16 +371,14 @@ class Channel(virtual.Channel):
         return super(Channel, self)._restore(message)
 
     def basic_ack(self, delivery_tag, multiple=False):
-        message = {}
-        sqs_message = {}
         try:
             message = self.qos.get(delivery_tag).delivery_info
             sqs_message = message['sqs_message']
         except KeyError:
             pass
         else:
-            self._sqs.delete_message(QueueUrl=message['sqs_queue'],
-                                     ReceiptHandle=sqs_message['ReceiptHandle'])
+            self.asynsqs.delete_message(message['sqs_queue'],
+                                        sqs_message['ReceiptHandle'])
         super(Channel, self).basic_ack(delivery_tag)
 
     def _size(self, queue):
